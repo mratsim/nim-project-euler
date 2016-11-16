@@ -1,0 +1,10 @@
+*
+!*.*
+
+# Cache
+nimcache
+
+# OSX
+.DS_Store
+
+
