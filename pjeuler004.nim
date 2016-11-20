@@ -10,7 +10,7 @@ from sequtils import filter
 proc divmod10(n: int): Option[(int, int)] =
     if n == 0:
         return none((int,int))
-    return some(( (n mod 10).int(), n div 10))
+    return some(( (n mod 10).int(), n div 10)) #TODO: understand the weird type of n mod 10
 
 proc toDigits(n: int): seq[int] =
     unfold(divmod10,n)
@@ -18,4 +18,4 @@ proc toDigits(n: int): seq[int] =
 proc isPalindrome(n: int) : bool =
     n.toDigits() == n.toDigits().reverse()
 
-echo lc[ x*y | (x <- 100..999, y <- 100..999), int].filter(isPalindrome).max()
+echo lc[ x*y | (x <- 100..999, y <- 100..999, isPalindrome(x*y)), int].max()
