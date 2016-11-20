@@ -1,5 +1,7 @@
+# Unfortunately you can't output Nim binaries in a "build" directory so root dir is littered with binaries :/
 *
 !*.*
+!LICENSE
 
 # Cache
 nimcache
