@@ -5,6 +5,7 @@ from lib_euler_functional import unfold
 from future import `=>`,lc,`[]`
 from options import Option, some, none
 from lib_euler_openarray import reverse
+# from algorithm import reverse
 from sequtils import filter
 
 proc divmod10(n: int): Option[(int, int)] =
