@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 from math import `^`, gcd
-from lib_euler_math import expmod, isEven
+from lib_euler_math import expmod, isEven, isqrt, bit_length
 from lib_euler_functional import take, any
 from random import random
 from future import `=>`
@@ -136,3 +136,43 @@ proc primFac_pollardRho*(n: int): seq[int] =
         let f = x.pollardRho()
         result.add(f)
         x = x div f
+
+
+######
+
+type
+  Bit = range[0..1]
+  Base = seq[int]
+  OddPackedBV = distinct Base
+
+proc `[]`(b: OddPackedBV, i: int): Bit =
+    let p = i shr 1
+    Base(b)[p shr 5] shr (p and 31) and 1 # i and 31 is a fast way to do i mod 32
+
+proc `[]=`(b: var OddPackedBV, i: int, value: Bit) =
+  let p = i shr 1 #in odd packed array 1 is in pos 0, 3 in pos 1, 5 in pos 2, 17 in pos 8 which is exactly odd shl 1 (odd div 2)
+  var w = addr Base(b)[p shr 5]
+  if value == 0: w[] = w[] and not (1'i32 shl (p and 31))
+  else: w[] = w[] or (1'i32 shl (p and 31))
+
+proc newOddOnlyBV(n: int, b: bool): OddPackedBV =
+    ## New bit packed boolean array, initialized to b bool
+    result = newSeq[int](n shr 1 + 1).OddPackedBV
+    if b:
+        for i in 1..n: # start at 1 because 1 (in pos 0) is not prime
+            result[i]=1
+
+# Ideally we should implement items and pairs for proper iteration
+
+#proc is faster than iterator
+proc primeSieve*(n: int): seq[int] =
+    result = @[]
+    var a = newOddOnlyBV(n, true)
+    let sqn = isqrt(n)
+    for i in countup(3,sqn,2):
+        if a[i]==1:
+            for j in countup(i*i, n, i shl 1): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
+                a[j] = 0
+    result.add(2)
+    for i in countup(3,n,2):
+        if a[i]==1: result.add(i)

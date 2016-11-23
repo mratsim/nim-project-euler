@@ -53,15 +53,15 @@ proc bit_length*[T: SomeInteger](n: T): T =
     y = y shr 1
     inc(result)
 
-proc divmod*[T: SomeUnsignedInt](n: T, b: T): (T, T) =
+proc divmod*[T: SomeInteger](n: T, b: T): (T, T) =
     ## return (n div base, n mod base)
     return (n div b, n mod b)
 
-proc isqrt*[T: SomeUnsignedInt](n: T):  T =
+proc isqrt*[T: SomeInteger](n: T):  T =
     ##integer square root, return the biggest squarable number under n
     ##Computation via Newton method
     var x = n
-    var y = (2'u shl ((n.bit_length()+1) shr 1)) - 1
+    var y = (2 shl ((n.bit_length()+1) shr 1)) - 1
     while y < x:
         x = y
         y = (x + n div x) shr 1
