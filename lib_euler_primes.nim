@@ -166,11 +166,11 @@ proc primeSieve*(n: uint): seq[uint] =
     var a = newOddOnlyBV(n shr 1)
     let maxn = (n - 1) shr 1 #TODO test boundaries
     let sqn = isqrt(n) shr 1 #TODO test boundaries
-    for i in countup(1,sqn,1):
+    for i in 1..sqn:
         if a[i]==0:
             let prime = i shl 1 + 1
             for j in countup((prime*prime) shr 1, maxn, cast[int](prime)): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
                 a.bv_composite_set(j)
     result.add(2)
-    for i in countup(1,maxn,1):
+    for i in 1..maxn:
         if a[i]==0: result.add(i shl 1 + 1)
