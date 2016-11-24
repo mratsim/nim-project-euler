@@ -4,11 +4,14 @@
 from lib_euler_primes import primeSieve
 from os import commandLineParams
 from strutils import parseUInt
-from math import ln
+from math import ln, pow
 
 let arguments = commandLineParams()
 
-#nth prime number is about n * log (n), * 2 for error
-# let r = (10001 * ln(10001.float32).int shl 1).primeSieve()
-# echo r[10000] #prime 1 is in pos 0, 10001 in pos 10000
-echo arguments[0].parseUInt.primeSieve
+#nth prime number is upper bound by
+# n(ln⁡ n+ln⁡ ln ⁡n)>pn>n(ln⁡ n+ln⁡ ln ⁡n−1)
+let n = 10001'f32
+let up_bound = n * (n.ln + n.ln.ln)
+let r = up_bound.uint.primeSieve()
+echo r[n.int-1] #prime 1 is in pos 0, 10001 in pos 10000
+# echo arguments[0].parseUInt.primeSieve
