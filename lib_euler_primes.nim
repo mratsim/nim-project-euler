@@ -141,38 +141,34 @@ proc primFac_pollardRho*(n: int): seq[int] =
 ######
 
 type
-  Bit = range[0..1]
-  Base = seq[int]
+  Base = seq[uint] #necessary to use the basic seq [] operator
   OddPackedBV = distinct Base
 
-proc `[]`(b: OddPackedBV, i: int): Bit =
-    let p = i shr 1
-    Base(b)[p shr 5] shr (p and 31) and 1 # i and 31 is a fast way to do i mod 32
+proc `[]`(b: OddPackedBV, i: uint): uint =
+    let p = i shr 1 #TODO optim divide by 2 globally to avoid dividing at each function call
+    Base(b)[(p shr 5).int] shr (p and 31) and 1 # i and 31 is a fast way to do i mod 32
 
-proc `[]=`(b: var OddPackedBV, i: int, value: Bit) =
-  let p = i shr 1 #in odd packed array 1 is in pos 0, 3 in pos 1, 5 in pos 2, 17 in pos 8 which is exactly odd shl 1 (odd div 2)
-  var w = addr Base(b)[p shr 5]
-  if value == 0: w[] = w[] and not (1'i32 shl (p and 31))
-  else: w[] = w[] or (1'i32 shl (p and 31))
-
-proc newOddOnlyBV(n: int, b: bool): OddPackedBV =
+proc newOddOnlyBV(n: uint): OddPackedBV =
     ## New bit packed boolean array, initialized to b bool
-    result = newSeq[int](n shr 1 + 1).OddPackedBV
-    if b:
-        for i in 1..n: # start at 1 because 1 (in pos 0) is not prime
-            result[i]=1
+    result = newSeq[uint](n shr 1 + 1).OddPackedBV
+
+proc bv_composite_set(b: var OddPackedBV, i: uint) =
+    let p = i shr 1 #TODO optim divide by 2 globally to avoid dividing at each function call
+    var w = addr Base(b)[(p shr 5).int]
+    w[] = w[] or (1'u shl (p and 31))
 
 # Ideally we should implement items and pairs for proper iteration
 
 #proc is faster than iterator
-proc primeSieve*(n: int): seq[int] =
+#to limit initialization time, we primes will be with value 0 in the bit array
+proc primeSieve*(n: uint): seq[uint] =
     result = @[]
-    var a = newOddOnlyBV(n, true)
+    var a = newOddOnlyBV(n)
     let sqn = isqrt(n)
     for i in countup(3,sqn,2):
-        if a[i]==1:
-            for j in countup(i*i, n, i shl 1): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
-                a[j] = 0
+        if a[i]==0:
+            for j in countup(i*i, n, (i shl 1).int): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
+                a.bv_composite_set(j)
     result.add(2)
     for i in countup(3,n,2):
-        if a[i]==1: result.add(i)
+        if a[i]==0: result.add(i)

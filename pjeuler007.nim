@@ -3,11 +3,12 @@
 
 from lib_euler_primes import primeSieve
 from os import commandLineParams
-from strutils import parseInt
+from strutils import parseUInt
 from math import ln
 
 let arguments = commandLineParams()
 
 #nth prime number is about n * log (n), * 2 for error
-let r = (10001 * ln(10001.float32).int shl 1).primeSieve()
-echo r[10000] #prime 1 is in pos 0, 10001 in pos 10000
+# let r = (10001 * ln(10001.float32).int shl 1).primeSieve()
+# echo r[10000] #prime 1 is in pos 0, 10001 in pos 10000
+echo arguments[0].parseUInt.primeSieve

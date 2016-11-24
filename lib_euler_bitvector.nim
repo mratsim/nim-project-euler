@@ -11,7 +11,16 @@ type
 proc `[]`(b: BitVector, i: int): Bit = Base(b)[i shr 5] shr (i and 31) and 1 # i and 31 is a fast way to do i mod 32
 
 proc `[]=`(b: var BitVector, i: int, value: Bit) =
+  # let index = i and 31
   var w = addr Base(b)[i shr 5]
+
+  # Alternative 0 to set bit
+  # w[] = w[] and (not (1'i32 shl index)) or (value shl index)
+  
+  # Alternative 1 with xor for bitsetter
+  # w[] = w[] xor (((-value) xor w[]) and (1'i32 shl index))
+
+  # Alternative 2 bit setter
   if value == 0: w[] = w[] and not (1'i32 shl (i and 31))
   else: w[] = w[] or (1'i32 shl (i and 31))
 

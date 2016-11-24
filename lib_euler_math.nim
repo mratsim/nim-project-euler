@@ -61,7 +61,8 @@ proc isqrt*[T: SomeInteger](n: T):  T =
     ##integer square root, return the biggest squarable number under n
     ##Computation via Newton method
     var x = n
-    var y = (2 shl ((n.bit_length()+1) shr 1)) - 1
+    const two: T = 2
+    var y = (two shl ((n.bit_length()+1) shr 1)) - 1
     while y < x:
         x = y
         y = (x + n div x) shr 1
