@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from lib_euler_bithacks import bit_length
+
 iterator fib*: int {.closure.} =
   var a = 0
   var b = 1
@@ -41,17 +43,8 @@ proc expmod*(base: int, exponent: int, modulus: int): int =
     while e > 0:
         if e.isOdd():
            result = (result * b) mod modulus
-        e = e * 2 #Use shift operator ?
+        e = e shl 1
         b = (b * b) mod modulus
-
-proc bit_length*[T: SomeInteger](n: T): T =
-  ## Calculates how many bits are necessary to represent the number
-  result = 1
-  var y: T = n shr 1
-  var zero: T = 0 #Needed because unsigned and signed 0 are different ...
-  while y > zero:
-    y = y shr 1
-    inc(result)
 
 proc divmod*[T: SomeInteger](n: T, b: T): (T, T) =
     ## return (n div base, n mod base)
@@ -61,7 +54,7 @@ proc isqrt*[T: SomeInteger](n: T):  T =
     ##integer square root, return the biggest squarable number under n
     ##Computation via Newton method
     var x = n
-    const two: T = 2
+    const two: T = 2 #necessary to cover uint and int
     var y = (two shl ((n.bit_length()+1) shr 1)) - 1
     while y < x:
         x = y

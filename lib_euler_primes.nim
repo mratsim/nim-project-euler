@@ -21,8 +21,9 @@
 # SOFTWARE.
 
 from math import `^`, gcd
-from lib_euler_math import expmod, isEven, isqrt, bit_length
+from lib_euler_math import expmod, isEven, isqrt
 from lib_euler_functional import take, any
+from lib_euler_bithacks import bit_length
 from random import random
 from future import `=>`
 
@@ -59,8 +60,8 @@ proc millerRabin(n: int): bool =
     var s = n-1
     var t = 0
     while isEven s:
-        s = s div 2 #OPTIM: check if bootleneck if yes use shiftr
-        t += 1
+        s = s shl 1
+        inc(t)
     
     for trials in @lowPrimes.take(20)():
         var v = expmod(trials, s, n)
@@ -71,7 +72,7 @@ proc millerRabin(n: int): bool =
                 if i == t - 1:
                     return true
                 else:
-                    i = i + 1
+                    inc(i)
                     v = expmod(v,2,n)
 
         return false
@@ -139,23 +140,22 @@ proc primFac_pollardRho*(n: int): seq[int] =
 
 
 ######
+#Roll own bitvector for speed
 
 type
   Base = seq[uint] #necessary to use the basic seq [] operator
   OddPackedBV = distinct Base
 
 proc `[]`(b: OddPackedBV, i: uint): uint =
-    let p = i shr 1 #TODO optim divide by 2 globally to avoid dividing at each function call
-    Base(b)[(p shr 5).int] shr (p and 31) and 1 # i and 31 is a fast way to do i mod 32
+    Base(b)[cast[int](i shr 5)] shr (i and 31) and 1 # i and 31 is a fast way to do i mod 32
 
 proc newOddOnlyBV(n: uint): OddPackedBV =
     ## New bit packed boolean array, initialized to b bool
     result = newSeq[uint](n shr 1 + 1).OddPackedBV
 
 proc bv_composite_set(b: var OddPackedBV, i: uint) =
-    let p = i shr 1 #TODO optim divide by 2 globally to avoid dividing at each function call
-    var w = addr Base(b)[(p shr 5).int]
-    w[] = w[] or (1'u shl (p and 31))
+    var w = addr Base(b)[cast[int](i shr 5)]
+    w[] = w[] or (1'u shl (i and 31))
 
 # Ideally we should implement items and pairs for proper iteration
 
@@ -163,12 +163,14 @@ proc bv_composite_set(b: var OddPackedBV, i: uint) =
 #to limit initialization time, we primes will be with value 0 in the bit array
 proc primeSieve*(n: uint): seq[uint] =
     result = @[]
-    var a = newOddOnlyBV(n)
-    let sqn = isqrt(n)
-    for i in countup(3,sqn,2):
+    var a = newOddOnlyBV(n shr 1)
+    let maxn = (n - 1) shr 1 #TODO test boundaries
+    let sqn = isqrt(n) shr 1 #TODO test boundaries
+    for i in countup(1,sqn,1):
         if a[i]==0:
-            for j in countup(i*i, n, (i shl 1).int): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
+            let prime = i shl 1 + 1
+            for j in countup((prime*prime) shr 1, maxn, cast[int](prime)): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
                 a.bv_composite_set(j)
     result.add(2)
-    for i in countup(3,n,2):
-        if a[i]==0: result.add(i)
+    for i in countup(1,maxn,1):
+        if a[i]==0: result.add(i shl 1 + 1)
