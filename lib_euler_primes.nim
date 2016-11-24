@@ -149,10 +149,6 @@ type
 proc `[]`(b: OddPackedBV, i: uint): uint =
     Base(b)[cast[int](i shr 5)] shr (i and 31) and 1 # i and 31 is a fast way to do i mod 32
 
-proc newOddOnlyBV(n: uint): OddPackedBV =
-    ## New bit packed boolean array, initialized to b bool
-    result = newSeq[uint](n shr 1 + 1).OddPackedBV
-
 proc bv_composite_set(b: var OddPackedBV, i: uint) =
     var w = addr Base(b)[cast[int](i shr 5)]
     w[] = w[] or (1'u shl (i and 31))
@@ -163,7 +159,7 @@ proc bv_composite_set(b: var OddPackedBV, i: uint) =
 #to limit initialization time, we primes will be with value 0 in the bit array
 proc primeSieve*(n: uint): seq[uint] =
     result = @[]
-    var a = newOddOnlyBV(n shr 1)
+    var a = newSeq[uint](n shr 6 + 1).OddPackedBV
     let maxn = (n - 1) shr 1 #TODO test boundaries
     let sqn = isqrt(n) shr 1 #TODO test boundaries
     for i in 1..sqn:
