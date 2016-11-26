@@ -3,15 +3,15 @@
 
 from lib_euler_primes import primeSieve
 from os import commandLineParams
-from strutils import parseUInt
-from math import ln, pow
+from strutils import parseUInt,parseFloat
+from math import ln
 
 let arguments = commandLineParams()
 
 #nth prime number is upper bound by
 # n(ln⁡ n+ln⁡ ln ⁡n)>pn>n(ln⁡ n+ln⁡ ln ⁡n−1)
-let n = 10001'f32
-let up_bound = n * (n.ln + n.ln.ln)
-let r = up_bound.uint.primeSieve()
-echo r[n.int-1] #prime 1 is in pos 0, 10001 in pos 10000
-# echo arguments[0].parseUInt.primeSieve
+# let n = arguments[0].parseFloat
+# let up_bound = n * (n.ln + n.ln.ln)
+# let r = up_bound.uint.primeSieve()
+# echo r[n.int-1] #prime 1 is in pos 0, 10001 in pos 10000
+echo arguments[0].parseUInt.primeSieve

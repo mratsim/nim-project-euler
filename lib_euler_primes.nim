@@ -151,22 +151,22 @@ proc `[]`(b: OddPackedBV, i: uint): uint =
 
 proc bv_composite_set(b: var OddPackedBV, i: uint) =
     var w = addr Base(b)[cast[int](i shr 5)]
-    w[] = w[] or (1'u shl (i and 31))
+    w[] = w[] or (1'u shl (i and 31)) # bit hack to set bit to 1
 
 # Ideally we should implement items and pairs for proper iteration
 
 #proc is faster than iterator
-#to limit initialization time, we primes will be with value 0 in the bit array
+#to limit initialization time, primes will be with value 0 in the bit array
 proc primeSieve*(n: uint): seq[uint] =
     result = @[]
     var a = newSeq[uint](n shr 6 + 1).OddPackedBV
     let maxn = (n - 1) shr 1 #TODO test boundaries
     let sqn = isqrt(n) shr 1 #TODO test boundaries
-    for i in 1..sqn:
+    for i in 1||sqn: #Use parallel OpenMP loops
         if a[i]==0:
             let prime = i shl 1 + 1
             for j in countup((prime*prime) shr 1, maxn, cast[int](prime)): #cross off multiples from i^2 to n, increment by i^2 + 2i because i^2+i is even
                 a.bv_composite_set(j)
     result.add(2)
-    for i in 1..maxn:
+    for i in 1||maxn:
         if a[i]==0: result.add(i shl 1 + 1)

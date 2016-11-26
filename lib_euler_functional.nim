@@ -96,3 +96,10 @@ proc unfold*[T](f: proc(items: T): Option[(T, T)] {.closure.}, x:T): seq[T] =
     while f(u).isSome():
         (r, u) = f(u).get()
         result.add(r)
+
+#fold for iterators:
+proc foldl*[T](iter: iterator(): T {.closure.}, f : proc(a:T, b:T):T, initval : T ):T  =
+    var i = iter
+    result = initval
+    for x in i():
+        result = f(result, x)

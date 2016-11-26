@@ -60,3 +60,10 @@ proc isqrt*[T: SomeInteger](n: T):  T =
         x = y
         y = (x + n div x) shr 1
     return x
+
+
+proc product*[T](x: openArray[T]): T {.noSideEffect.} =
+  ## Computes the sum of the elements in `x`.
+  ## If `x` is empty, 0 is returned.
+  result = 1
+  for i in items(x): result = result * i
