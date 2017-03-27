@@ -6,7 +6,7 @@ from future import lc, `[]` #list comprehension
 
 let pyth = lc[(a,b,c) | (a<-1..1000,
                    b<-a..1000, #avoid duplicate
-                   c<-b..1000, #c is superio to a and b
+                   c<-b..1000, #c is superior to a and b
                    a*a + b*b == c*c, 
                    a+b+c == 1000),
                    tuple[a,b,c: int]]

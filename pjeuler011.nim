@@ -1,9 +1,3 @@
-
-# Logged in as chok
-# Sat, 26 Nov 2016, 12:02
-# RSS Feedsecure_icon
-# Previous
-# Next
 # Largest product in a grid
 # Problem 11
 # In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
