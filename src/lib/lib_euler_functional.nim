@@ -46,15 +46,23 @@ proc take*[T](iter: iterator(): T, n: int): iterator(): T =
         break
       yield r
 
-proc take*[T](seq: seq[T], n: int): iterator(): T =
+proc take*[T](s: seq[T], n: int): iterator(): T =
   ## .. code-block:: Nim
   ##   take(1;2;3;4, 3) -> 1;2;3
-  ##   take(1;2, 3) -> 1;2  
+  ##   take(1;2, 3) -> 1;2
 
   result = iterator(): T =
-      for i, value in seq: #arr.len()-1
-        yield value
-        if i == seq.len()-1: break  #TODO TEST: if it's proper stop
+    for i, value in s:
+      yield value
+      if i == s.len()-1 or i >= n:
+        break  #TODO TEST: if it's proper stop
+
+iterator take*[T](oa: openarray[T], n: int): T =
+  for i, value in oa: #arr.len()-1
+    yield value
+    if i == oa.len()-1:
+      break  #TODO TEST: if it's proper stop
+
 
 
 # count infinite iterator
@@ -69,7 +77,7 @@ proc count*[T](start: T): iterator(): T =
       x = x+1
 
 proc count*[T](start: T, till: T, step: T = 1, includeLast = false):
-                                                      iterator(): T =
+                            iterator(): T =
   ## .. code-block:: Nim
   ##   count(x0, x1) -> x0; x0 + 1; x0 + 2; ...; x1-1
   result = iterator (): T {.closure.} =
@@ -89,17 +97,17 @@ proc any*[T](arr: openarray[T], pred: proc(item: T): bool {.closure.}): bool =
 # unfold rewrite with Option monad
 from options import Option, isSome, get
 proc unfold*[T](f: proc(items: T): Option[(T, T)] {.closure.}, x:T): seq[T] =
-    ## Build a sequence from function f: T -> Option(T,T) and a seed of type T
-    result = @[]
-    var u, r = x
+  ## Build a sequence from function f: T -> Option(T,T) and a seed of type T
+  result = @[]
+  var u, r = x
 
-    while f(u).isSome():
-        (r, u) = f(u).get()
-        result.add(r)
+  while f(u).isSome():
+    (r, u) = f(u).get()
+    result.add(r)
 
 #fold for iterators:
 proc foldl*[T](iter: iterator(): T {.closure.}, f : proc(a:T, b:T):T, initval : T ):T  =
-    var i = iter
-    result = initval
-    for x in i():
-        result = f(result, x)
+  var i = iter
+  result = initval
+  for x in i():
+    result = f(result, x)

@@ -42,11 +42,11 @@ const monsterHunterNumber = "73167176531330624919225119674426574742355349194934"
                "05886116467109405077541002256983155200055935729725" &
                "71636269561882670428252483600823257530420752963450"
 
-from lib_euler_digits import toDigits
+from lib/lib_euler_digits import toDigits
 from strutils import parseInt
-from lib_euler_math import product
-from lib_euler_functional import foldl
-from lib_euler_openarray import reverse
+from lib/lib_euler_math import product
+from lib/lib_euler_functional import foldl
+from lib/lib_euler_openarray import reverse
 from future import `=>`
 
 type

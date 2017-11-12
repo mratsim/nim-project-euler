@@ -5,8 +5,8 @@
 from math import sum
 from sequtils import toseq, filter
 from future import `=>`
-from lib_euler_math import fib, isEven
-from lib_euler_functional import takeWhile
+from lib/lib_euler_math import fib, isEven
+from lib/lib_euler_functional import takeWhile
 
 
 var s = fib.takeWhile(x => x<4_000_000)

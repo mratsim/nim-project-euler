@@ -30,21 +30,8 @@ iterator fib*: int {.closure.} =
     swap a, b
     b = a + b
 
-proc isOdd*(i: SomeInteger): bool {.procvar.} = (i and 1) != 0
-proc isEven*(i: SomeInteger): bool {.procvar.} = (i and 1) == 0
-
-proc expmod*(base: int, exponent: int, modulus: int): int =
-    if modulus == 1: return 0
-    #Should assert overflow of (modulus - 1) * (modulus - 1)
-    result = 1
-    var b = base mod modulus
-    var e = exponent
-
-    while e > 0:
-        if e.isOdd():
-           result = (result * b) mod modulus
-        e = e shl 1
-        b = (b * b) mod modulus
+proc isOdd*[T: SomeInteger](i: T): bool = (i and 1) != 0
+proc isEven*[T: SomeInteger](i: T): bool = (i and 1) == 0
 
 proc divmod*[T: SomeInteger](n: T, b: T): (T, T) =
     ## return (n div base, n mod base)

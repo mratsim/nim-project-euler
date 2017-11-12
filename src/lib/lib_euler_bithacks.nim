@@ -26,7 +26,7 @@ proc `[]=`*(b: var BitVector, i: int, value: Bit) =
 
   # Alternative 0 to set bit
   # w[] = w[] and (not (1'i32 shl index)) or (value shl index)
-  
+
   # Alternative 1 with xor for bitsetter
   # w[] = w[] xor (((-value) xor w[]) and (1'i32 shl index))
 
