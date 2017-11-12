@@ -1,14 +1,12 @@
-# Unfortunately you can't output Nim binaries in a "build" directory so root dir is littered with binaries :/
-*
-!*.*
-!LICENSE
+# Binaries
+bin/
 
 # Cache
-nimcache
+nimcache/
 
 # OSX
 .DS_Store
 
-#Research
-reference_code
+# Research
+reference_code/
 
