@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from ./lib_euler_math import isOdd
+from ./integer_math import isOdd
 
 
 proc mulmod*[T: SomeInteger](a, b, modulus: T): T =

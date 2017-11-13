@@ -42,11 +42,11 @@ const monsterHunterNumber = "73167176531330624919225119674426574742355349194934"
                "05886116467109405077541002256983155200055935729725" &
                "71636269561882670428252483600823257530420752963450"
 
-from lib/lib_euler_digits import toDigits
+from lib/digits import toDigits
 from strutils import parseInt
-from lib/lib_euler_math import product
-from lib/lib_euler_functional import foldl
-from lib/lib_euler_openarray import reverse
+from lib/integer_math import product
+from lib/functional import foldl
+from algorithm import reversed
 from future import `=>`
 
 type
@@ -64,7 +64,7 @@ proc genWindows(n_str: string, size: int):
   result = iterator(): DigProduct =
     for i,v in n_str:
       let s = n_str[i.int..i.int+size-1].parseInt.toDigits
-      yield (s.reverse,s.product)
+      yield (s.reversed,s.product)
 
 proc keepMaxProd(a: DigProduct, b: DigProduct): DigProduct =
   if a.prod >= b.prod:

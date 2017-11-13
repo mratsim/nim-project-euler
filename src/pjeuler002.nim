@@ -3,11 +3,12 @@
 # By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 
 from math import sum
-from sequtils import toseq, filter
+from sequtils import toSeq, filterIt
 from future import `=>`
-from lib/lib_euler_math import fib, isEven
-from lib/lib_euler_functional import takeWhile
+from lib/integer_math import isEven
+from lib/functional import takeWhile
+from lib/fibonacci import fib
 
 
-var s = fib.takeWhile(x => x<4_000_000)
-echo s().toseq().filter(isEven).sum()
+var s = fib.takeWhile(x => x < 4_000_000)
+echo s().toSeq.filterIt(isEven(it)).sum()

@@ -1,7 +1,5 @@
-from lib_euler_functional import unfold
+from functional import unfold
 from options import Option, some, none
-from lib_euler_openarray import reverse
-# from algorithm import reverse
 
 proc divmod10(n: int): Option[(int, int)] =
     if n == 0:
@@ -10,6 +8,3 @@ proc divmod10(n: int): Option[(int, int)] =
 
 proc toDigits*(n: int): seq[int] =
     unfold(divmod10,n)
-
-proc isPalindrome*(n: int) : bool =
-    n.toDigits() == n.toDigits().reverse()

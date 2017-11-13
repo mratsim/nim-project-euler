@@ -2,7 +2,7 @@
 
 # Find the sum of all the primes below two million.
 
-from lib/lib_euler_primes import primeSieve
+from lib/primes import primeSieve
 from math import sum
 
 echo primeSieve(2_000_000).sum
