@@ -22,6 +22,18 @@
 
 from ./lib_euler_math import isOdd
 
+
+proc mulmod*[T: SomeInteger](a, b, modulus: T): T =
+  var a_m = a mod modulus
+  var b_m = b mod modulus
+  if b_m > a_m:
+    swap(a_m, b_m)
+  while b_m > 0:
+    if b_m.isOdd:
+      result = (result + a_m) mod modulus
+    a_m = (a_m shl 1) mod modulus
+    b_m = b_m shr 1
+
 proc expmod*[T: SomeInteger](base, exponent, modulus: T): T =
   ## Modular exponentiation
 
@@ -42,9 +54,9 @@ proc expmod*[T: SomeInteger](base, exponent, modulus: T): T =
 
   while e > 0:
     if isOdd e:
-      result = (result * b) mod modulus
+      result = mulmod(result, b, modulus)
     e = e shr 1 # e div 2
-    b = b shl 1 mod modulus
+    b = mulmod(b,b,modulus)
 
 proc addmod*[T: SomeInteger](a, b, modulus: T): T =
   let a_m = if a < modulus: a else: a mod modulus
@@ -61,3 +73,8 @@ proc addmod*[T: SomeInteger](a, b, modulus: T): T =
     result = a_m - b_from_m
   else:
     result = modulus - b_from_m + a_m
+
+when isMainModule:
+  # https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/fast-modular-exponentiation
+  assert expmod(5, 117,19) == 1
+  assert expmod(3, 1993, 17) == 14

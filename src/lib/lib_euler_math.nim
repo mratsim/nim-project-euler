@@ -30,6 +30,7 @@ iterator fib*: int {.closure.} =
     swap a, b
     b = a + b
 
+# TODO: inline
 proc isOdd*[T: SomeInteger](i: T): bool = (i and 1) != 0
 proc isEven*[T: SomeInteger](i: T): bool = (i and 1) == 0
 
