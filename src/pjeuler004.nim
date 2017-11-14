@@ -2,9 +2,8 @@
 # Find the largest palindrome made from the product of two 3-digit numbers.
 
 from lib/digits import toDigits
-from future import `=>`,lc,`[]`
+from future import lc,`[]`
 from algorithm import reversed
-from sequtils import filter
 
 proc isPalindrome*(n: int) : bool =
     n.toDigits == n.toDigits.reversed
