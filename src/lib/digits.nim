@@ -1,5 +1,6 @@
 from functional import unfold
 from options import Option, some, none
+from algorithm import reversed
 
 proc divmod10_opt(n: int): Option[(int, int)] =
     if n == 0:
@@ -7,7 +8,7 @@ proc divmod10_opt(n: int): Option[(int, int)] =
     return some((n mod 10, n div 10))
 
 proc toDigits*(n: int): seq[int] =
-    unfold(divmod10_opt,n)
+    unfold(divmod10_opt,n).reversed
 
 proc divmod10*(n: int): tuple[rem: int, quot: int] =
     if n == 0:
